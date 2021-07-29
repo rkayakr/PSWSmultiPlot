@@ -4,6 +4,7 @@
 # plots files from multiple subdir to compare node results
 # plot title from first file
 # windows version for directories that mirror Pi
+#uses WWV_utility2.py
 # Bob Benedict, KD8CGH, 7/29/2021
 # 
 # create text file "files" in PSWS directory
@@ -17,4 +18,5 @@
 # loads file names in list
 # plots first file and create axis and title info
 # plots rest in loop as curves on first plot
+#uses date in ledgend
 # calculates average and plots
