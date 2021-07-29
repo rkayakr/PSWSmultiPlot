@@ -14,6 +14,7 @@ files in PSWS subdir, leaves plot in Splot
 plots files from multiple subdir to compare node results
 plot title from first file
 windows version for directories that mirror Pi
+uses WWV_utility2.py
 Bob Benedict, KD8CGH, 7/29/2021
 
 create text file in PSWS directory
