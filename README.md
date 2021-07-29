@@ -1,5 +1,5 @@
 # PSWSmultiPlot
-# mod to plot up to 10 PSWS "rawdata" files and average value
+#  mod to plot up to 10 PSWS "rawdata" files and average value
 # based on "WWV_plt2.py" by dkazdan & jgibbons
 # files in a PSWS subdir, leaves plot in Splot
 # can plots files from multiple subdir to compare different node results for same day
