@@ -8,7 +8,7 @@
 # Bob Benedict, KD8CGH, 7/29/2021
 # 
 # create text file "plotfiles" in PSWS directory
-#     keyword ('Doppler' or 'Power')
+#    keyword ('Doppler' or 'Power')
 #    subdir/filename1 
 #    subdir/filename2
 #    ...
