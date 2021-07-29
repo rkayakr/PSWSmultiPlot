@@ -3,11 +3,11 @@
 # files in PSWS subdir, leaves plot in Splot
 # plots files from multiple subdir to compare node results
 # plot title from first file
-# windows version for directories that mirror Pi
+# windows version for directories that mirror Pi structure
 #uses WWV_utility2.py
 # Bob Benedict, KD8CGH, 7/29/2021
 # 
-# create text file "files" in PSWS directory
+# create text file "plotfiles" in PSWS directory
 #   keyword ('Doppler' or 'Power')
 #   subdir/filename1 
 #   subdir/filename2
