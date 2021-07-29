@@ -17,7 +17,7 @@ windows version for directories that mirror Pi
 uses WWV_utility2.py
 Bob Benedict, KD8CGH, 7/29/2021
 
-create text file in PSWS directory
+create text file "plotfiles" in PSWS directory
   keyword ('Doppler' or 'Power')
   subdir/filename1 
   subdir/filename2
@@ -47,7 +47,7 @@ import subprocess
 from WWV_utility2 import time_string_to_decimals, graph_Doppler_and_power_data
 import maidenhead as mh
 
-names = open("E:\Documents\PSWS\\DirTestfiles.txt", "r")
+names = open("E:\Documents\PSWS\\plotfiles.txt", "r")
 PlotTarget = names.readline()
 PlotTarget = PlotTarget.strip('\n')
 
