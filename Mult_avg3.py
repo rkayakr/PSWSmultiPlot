@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+WWV_plt2.py
 Created on Mon July 1 2020
 Full Beacon (WWV / CHU) plotting of 2 input fomats
 added hours ticks, removed time from UTC dat in header, added zero ref line for doppler freq shift, Elv now Elev  7-31=20 JCG
@@ -9,11 +10,11 @@ added autoxfer, autoplot on/off capability, fixed .png filename format problem  
 @authors dkazdan jgibbons
 
 **********************************************
-mod to plot up to 10 PSWS "rawdata" files and average value
-files in PSWS subdir, leaves plot in Splot
+extensive mod to plot up to 10 PSWS "rawdata" files and average value
+expects "PSWS" directory  with raw files in PSWS subdirs, leaves plot in Mplot directory
 plots files from multiple subdir to compare node results
 plot title from first file
-windows version for directories that mirror Pi
+windows version hardcoded PSWS directory location
 uses WWV_utility2.py
 Bob Benedict, KD8CGH, 7/29/2021
 
@@ -23,31 +24,34 @@ create text file "plotfiles" in PSWS directory
   subdir/filename2
   ...
 
-if found 'Doppler' will plot Doppler shifts, if not, will plot Power
+if found 'Doppler' will plot Doppler shifts, else will plot Power
 
 loads file names in list
 plots first file and create axis and title info
 plots rest in loop as curves on first plot
 calculates average and plots
+leaves plotfile in Mplot directory
 
 """
 
-import os
+#import os
 from os import path
 import sys
 import csv
-import shutil
-from datetime import date, timedelta
+#import shutil
+#from datetime import date, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import legend, show, grid, figure, savefig
 import matplotlib.colors as mcolors
 from scipy.signal import filtfilt, butter
-import subprocess
-from WWV_utility2 import time_string_to_decimals, graph_Doppler_and_power_data
-import maidenhead as mh
+#import subprocess
+from WWV_utility2 import time_string_to_decimals
 
-names = open("E:\Documents\PSWS\\plotfiles.txt", "r")
+homepath = "E:\\Documents\\PSWS\\"
+
+names = open(homepath+"plotfiles.txt","r")
+
 PlotTarget = names.readline()
 PlotTarget = PlotTarget.strip('\n')
 
@@ -56,7 +60,6 @@ Filedates=['a' for a in range (10)]
 PrFilenames=['a' for a in range (10)]
 
 nfiles = 0
-print(nfiles)
 
 colors=['b','g','r','c','m','y','tab:orange','tab:gray','tab:purple','tab:brown']
 
@@ -68,57 +71,23 @@ while True:
     Filedates[nfiles]=temp[17:23]
     nfiles=nfiles + 1
         
-print(Filenames[0:9])
-print(Filedates[0:9])
-print(nfiles)
+#print(Filenames[0:9])
+#print(Filedates[0:9])
+print('number of files',nfiles)
 if nfiles > 10 :
     print('10 file limit')
     sys.exit(0)
-#
-# ~ points to users home directory - usually /home/pi/
-#homepath = os.path.expanduser('~')
 
-# imbed the trailing / in the home path
-#homepath = homepath + "/PSWS/"
-homepath = "E:\\Documents\\PSWS\\"
-#print('Home Path = ' + homepath)
-
-# Define the base processing directory
-#PROCESSDIR = homepath + 'Srawdata/'
 PROCESSDIR = homepath
-#directories for temp storing processed data files
-DATADIR = homepath + 'Stemp/'
-
-#saved data directrory
-SAVEDIR = homepath + 'Sdata/'
 
 #saved plot directrory
-PlotDir = homepath + 'Splot/'
+PlotDir = homepath + 'Mplot/'
 
-#saved info about system directory
-InfoDir = homepath + 'Sinfo/'
-#print('InfoDir = ' + InfoDir)
-
-#transfer directory  (files to be sent to server node)
-XferDir = homepath + 'Sxfer/'
-#print('XferDir = ' + XferDir)
-
-# flag file for auto plot on / off
-autoplotfile = homepath + 'Scmd/autoplot'
-#print('AutoPlot file path = ' + autoplotfile)
-
-# flag file for auto transfer on / off
-autoxferfile = homepath + 'Scmd/autoxfer'
-#print('AutoPlot file path = ' + autoplotfile)
-
-#-------------------------------------------------
 '''
 read first file
 '''
 PrFilenames=(PROCESSDIR + Filenames[0])
 
-#-------------------------------------------------------------------
-# Check to see if the file from yesterday exists; if not, exit the program
 if (path.exists(PrFilenames)):
     print('File ' + PrFilenames + ' found!\nProcessing...')
 else:
@@ -161,20 +130,6 @@ with open(PrFilenames, 'r') as dataFile:
 #        print('Radio ID =', RadioID)
         beacon = Header[9]
 #        print('Beacon =', beacon)
-
-    # Try using original FLdigi format w/o info line fake all data
-#    if (Header[0] == "UTC"):
-#        print('Detected Original FLDigi Header Format')
-#        UTCDTZ = "2020-00-00T00:00:00Z"
-#        node= "N00000"
-#        Lat = '00.00000'
-#        Long = '-00.00000'
-#        Elev = '000'
-#        print('GridSqr =', GridSqr)
-#        citystate = 'NOcity NOstate'
-#        RadioID = SRID
-#        beacon = "Unknown"
-#        NewHdr = 'FLDigi'
 
     if (NewHdr == 'Unknown'):
         ChkDate = Header[0]  # load in first row entry
@@ -255,7 +210,7 @@ for row in data:
             Power_dB[0].append (float(row[4])) # log power from col 4
 
 
-print('nf ',0,'hours',len(hours[0]))
+print('nf ',0,'len hours',len(hours[0]))
 
 ###############################################################################################
 # Find max and min of Power_dB for graph preparation:
@@ -291,12 +246,8 @@ filtDoppler[0] = filtfilt(b, a, Doppler[0])
 
 #print ('Filter power data')
 filtPower[0] = filtfilt(b, a, Power_dB[0])
-#sys.exit(0)
-##%% modified from "Double-y axis plot,
-## http://kitchingroup.cheme.cmu.edu/blog/2013/09/13/Plotting-two-datasets-with-very-different-scales/
 
 ##################################################################################################
-
 
 # set up x-axis with time
 fig = plt.figure(figsize=(19,10)) # inches x, y with 72 dots per inch
@@ -349,7 +300,7 @@ for nf in range(1, nfiles):
             Vpk[nf].append (float(row[3])) # Get Volts peak from col 3
             Power_dB[nf].append (float(row[4])) # log power from col 4    
 
-# filter second file data
+# filter  file data
     filtDoppler[nf] = filtfilt(b, a, Doppler[nf])
     filtPower[nf] = filtfilt(b, a, Power_dB[nf])
 
@@ -363,11 +314,6 @@ for nf in range(1, nfiles):
         ax.plot(hours[nf], filtDoppler[nf], colors[nf], label=Filedates[nf]) # color k for black
     else:
         ax.plot(hours[nf], filtPower[nf], colors[nf], label=Filedates[nf]) # color k for black
-
-# following lines set ylim for power readings in file
-#ax2.set_ylim(min_power, max_power) #as determined above for this data set
-#for tl in ax2.get_yticklabels():
-#    tl.set_color('r')
 
 '''
 #############################################################################
@@ -400,13 +346,9 @@ else:
         temp=temp/nfiles
         avg.append(temp)
 
-
-
-print('avg',len(avg))
-
+#print('avg',len(avg))
 
 ax.plot(hours[ak], avg, 'k', label='Average') # color k for black
-
 
 '''
 end average
@@ -463,15 +405,13 @@ elif (beacon == 'Unknown'):
     print('Final Plot for Decoded Unknown Beacon\n')
     beaconlabel = 'Unknown Beacon'
 
-#PlotDir = homepath + 'Splot/'
 # Create Plot Title
 plt.title(beaconlabel + ' Grape Data Plot\nNode:  ' + node + '     Gridsquare:  '+ GridSqr + '\nLat= ' + Lat + '    Long= ' + Long + '    Elev= ' + Elev + ' M\n' )
 
 # Create Plot File Nam
 #GraphFile = yesterdaystr + '_' + node + '_' + RadioID + '_' + GridSqr + '_' + beacon + '_graph.png'
-GraphFile = PlotTarget + '_' + node + '_' + RadioID + '_' + GridSqr + '_' + beacon + '.png'
+GraphFile = 'multi '+ PlotTarget + '_' + node + '_' + RadioID + '_' + GridSqr + '_' + beacon + '.png'
 PlotGraphFile = PlotDir + GraphFile
-XferGraphFile = XferDir + GraphFile
 
 # create plot
 #plt.savefig(PlotDir + yesterdaystr + '_' + node + '_' +  GridSqr + '_' +  RadioID + '_' +  beacon + '_graph.png', dpi=250, orientation='landscape')
@@ -482,25 +422,4 @@ print('Plot File: ' + GraphFile + '\n')  # indicate plot file name for crontab p
 
 
 #-------------------------------------------------------------------
-# Check to see if the autoxfer file exists; if not, skip copying the plot
-if (path.exists(autoxferfile)):
-    print('autoxfer enable File found\n')
-    # copy plot file to transfer directory
-    print('Copying file to Sxfer directory for upload ',XferGraphFile)  # Copy final processed data file also to /Sxfer/ directory for transfer
-    shutil.copy(PlotGraphFile, XferGraphFile)
-
-else:
-    print('No autoxfer enable File found - exiting')
-
-#-------------------------------------------------------------------
-# Check to see if the autoplot file exists; if not, skip the plot
-if (path.exists(autoplotfile)):
-    print('autoplot enable File found - Processing Plot...\n')
-    subprocess.call('gpicview ' + PlotGraphFile +' &', shell=True)   #create shell and plot the data from graph file
-else:
-    print('No autoplot enable File found - exiting')
-#-----------------------------------------------
-
-#subprocess.call('gpicview ' + GraphFile +' &', shell=True)   #create shell and plot the data from graph file
-
-print('Exiting python combined processing program gracefully')
+print('Exiting python multi plot program gracefully')
