@@ -1,10 +1,10 @@
 # PSWSmultiPlot
 	program to plot up to 10 PSWS "rawdata" files and average value
 	based on "WWV_plt2.py" by dkazdan & jgibbons
-	files in a PSWS subdir, leaves plot in Splot
+	windows version for hard coded directory PSWS
+	files in a PSWS subdirs, leaves plot in Mplot dir
 	can plots files from multiple subdir to compare different node results for same day
-	plot title taken from first file
-	windows version for hard coded directories that mirror Pi, edit for your case
+	plot title taken from first file in plotfiles.txt
 	uses WWV_utility2.py
 		Bob Benedict, KD8CGH, 7/29/2021
  
