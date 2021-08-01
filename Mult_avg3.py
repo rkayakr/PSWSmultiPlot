@@ -54,6 +54,10 @@ names = open(homepath+"plotfiles.txt","r")
 
 PlotTarget = names.readline()
 PlotTarget = PlotTarget.strip('\n')
+if names.readline() == 'Average':
+    doavg=True
+else:
+    doavg=False
 
 Filenames=['a' for a in range (10)]
 Filedates=['a' for a in range (10)]
@@ -320,35 +324,36 @@ for nf in range(1, nfiles):
 end for read and plot loop, start average
 '''
 # find shortest data set, limit average to that
-al=1000000
-ak=0
+if doavg :
+    al=1000000
+    ak=0
 
-for k in range(nfiles):
-    templ=len(hours[k])
-    if templ < al:
-        al=templ
-        ak=k
+    for k in range(nfiles):
+        templ=len(hours[k])
+        if templ < al:
+            al=templ
+            ak=k
 
-avg=[]
+    avg=[]
 
-if (PlotTarget == 'Doppler'):
-    for i in range(al):
-        temp=0.0
-        for j in range(nfiles):
-            temp=temp+filtDoppler[j][i]
-        temp=temp/nfiles
-        avg.append(temp)
-else:
-    for i in range(al):
-        temp=0.0
-        for j in range(nfiles):
-            temp=temp+filtPower[j][i]
-        temp=temp/nfiles
-        avg.append(temp)
+    if (PlotTarget == 'Doppler'):
+        for i in range(al):
+            temp=0.0
+            for j in range(nfiles):
+                temp=temp+filtDoppler[j][i]
+            temp=temp/nfiles
+            avg.append(temp)
+    else:
+        for i in range(al):
+            temp=0.0
+            for j in range(nfiles):
+                temp=temp+filtPower[j][i]
+            temp=temp/nfiles
+            avg.append(temp)
 
-#print('avg',len(avg))
+    #print('avg',len(avg))
 
-ax.plot(hours[ak], avg, 'k', label='Average') # color k for black
+    ax.plot(hours[ak], avg, 'k', label='Average') # color k for black
 
 '''
 end average
