@@ -54,7 +54,8 @@ names = open(homepath+"plotfiles.txt","r")
 
 PlotTarget = names.readline()
 PlotTarget = PlotTarget.strip('\n')
-if names.readline() == 'Average':
+PlotAverage = names.readline()
+if PlotAverage[0:7] == 'Average':
     doavg=True
 else:
     doavg=False
