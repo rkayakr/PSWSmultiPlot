@@ -1,4 +1,5 @@
 Doppler
+Average
 Srawdata/analysis210719.csv
 Srawdata/analysis210720.csv
 Srawdata/analysis210721.csv
