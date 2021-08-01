@@ -10,7 +10,7 @@
  
 	create text file "plotfiles" in PSWS directory
 		keyword ('Doppler' or 'Power')
-		Average (if "Average" will plot average of data, else not
+		Average (if "Average" will plot average of data, else not)
 		subdir/filename1 
 		subdir/filename2
 		...
