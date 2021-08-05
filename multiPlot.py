@@ -10,6 +10,9 @@ added autoxfer, autoplot on/off capability, fixed .png filename format problem  
 @authors dkazdan jgibbons
 
 **********************************************
+version 1.1 adds sunrise sunset times for location of lat long in first file
+requires suntime library https://github.com/SatAgro/suntime
+
 extensive mod to plot up to 10 PSWS "rawdata" files and average value
 expects "PSWS" directory  with raw files in PSWS subdirs, leaves plot in Mplot directory
 plots files from multiple subdir to compare node results
@@ -256,9 +259,8 @@ filtDoppler[0] = filtfilt(b, a, Doppler[0])
 filtPower[0] = filtfilt(b, a, Power_dB[0])
 
 ##################################################################################################
-
+# sunrise sunset times in UTC
 sun = Sun(float(Lat), float(Long))
-#sun=Sun(Lat,Long)
 print(UTC_DT)
 SDAY=int(UTC_DT[8:10])
 SMON=int(UTC_DT[5:7])
@@ -266,16 +268,11 @@ SYEAR=int(UTC_DT[0:4])
 sdate = datetime.date(SYEAR, SMON, SDAY)
 today_sr = sun.get_sunrise_time(sdate)
 today_ss = sun.get_sunset_time(sdate)
-print('Today at Warsaw the sun raised at {} and get down at {} UTC'.
-      format(today_sr.strftime('%H'), today_ss.strftime('%H:%M')))
-print(today_sr)
-#print(today_sr.strftime[12:13])
+#print(today_sr)
 srh=int(format(today_sr.strftime('%H')))
-print(srh)
 srm=int(format(today_sr.strftime('%M')))
 srx=srh+srm/60
 ssh=int(format(today_ss.strftime('%H')))
-print(ssh)
 ssm=int(format(today_ss.strftime('%M')))
 ssx=ssh+ssm/60
 
@@ -306,11 +303,6 @@ else:
     
 # add grid lines - RLB
 plt.grid(axis='both')
-
-
-
-
-
 
 '''
 ######################################################################
@@ -395,11 +387,7 @@ if doavg :
     ax.plot(hours[ak], avg, 'k', label='Average') # color k for black
 
 '''
-end average, start sunrise-sunset
-'''
-
-
-'''
+end average
 '''
 ax.legend(loc="lower right", title="Legend Title", frameon=False)
 
