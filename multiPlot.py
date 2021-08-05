@@ -45,6 +45,9 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import legend, show, grid, figure, savefig
 import matplotlib.colors as mcolors
 from scipy.signal import filtfilt, butter
+import datetime  
+import suntime
+from suntime import Sun, SunTimeException
 #import subprocess
 from WWV_utility2 import time_string_to_decimals
 
@@ -124,9 +127,9 @@ with open(PrFilenames, 'r') as dataFile:
         GridSqr = Header[3]
 #        print('GridSqr =', GridSqr)
         Lat = Header[4]
-#        print('Lat =', Lat)
+        print('Lat =', Lat)
         Long = Header[5]
-#        print('Long =', Long)
+        print('Long =', Long)
         Elev = Header[6]
 #        print('Elev =', Elev)
         citystate = Header[7]
@@ -254,6 +257,28 @@ filtPower[0] = filtfilt(b, a, Power_dB[0])
 
 ##################################################################################################
 
+sun = Sun(float(Lat), float(Long))
+#sun=Sun(Lat,Long)
+print(UTC_DT)
+SDAY=int(UTC_DT[8:10])
+SMON=int(UTC_DT[5:7])
+SYEAR=int(UTC_DT[0:4])
+sdate = datetime.date(SYEAR, SMON, SDAY)
+today_sr = sun.get_sunrise_time(sdate)
+today_ss = sun.get_sunset_time(sdate)
+print('Today at Warsaw the sun raised at {} and get down at {} UTC'.
+      format(today_sr.strftime('%H'), today_ss.strftime('%H:%M')))
+print(today_sr)
+#print(today_sr.strftime[12:13])
+srh=int(format(today_sr.strftime('%H')))
+print(srh)
+srm=int(format(today_sr.strftime('%M')))
+srx=srh+srm/60
+ssh=int(format(today_ss.strftime('%H')))
+print(ssh)
+ssm=int(format(today_ss.strftime('%M')))
+ssx=ssh+ssm/60
+
 # set up x-axis with time
 fig = plt.figure(figsize=(19,10)) # inches x, y with 72 dots per inch
 ax = fig.add_subplot(111)
@@ -262,18 +287,31 @@ ax.set_xlim(0,24) # UTC day
 ax.set_xticks([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24], minor=False)
 
 # plot first curve
-if (PlotTarget == 'Doppler'):    
+if (PlotTarget == 'Doppler'):
+    ax.plot([srx,srx],[-1,1],'y',label='sunrise',linestyle='dashed')
+    ax.plot([ssx,ssx],[-1,1],'b',label='sunset',linestyle='dashed')
     ax.plot(hours[0], filtDoppler[0], colors[0],label=Filedates[0]) # color k for black
     ax.set_ylabel('Doppler shift, Hz '+ Filedates[0])
     ax.set_ylim([-1.0, 1.0]) # -1 to 1 Hz for Doppler shift
     plt.axhline(y=0, color="gray", lw=1) # plot a zero freq reference line for 0.000 Hz Doppler shift
+    
+    
 else:
+    ax.plot([srx,srx],[-90,0],'y',label='sunrise',linestyle='dashed')
+    ax.plot([ssx,ssx],[-90,0],'b',label='sunset',linestyle='dashed')
     ax.plot(hours[0], filtPower[0], colors[0],label=Filedates[0]) # color k for black
     ax.set_ylabel('Power, dB '+ Filedates[0])
     ax.set_ylim(-90, 0)    
-
+    
+    
 # add grid lines - RLB
 plt.grid(axis='both')
+
+
+
+
+
+
 '''
 ######################################################################
 read and plot files loop
@@ -357,9 +395,12 @@ if doavg :
     ax.plot(hours[ak], avg, 'k', label='Average') # color k for black
 
 '''
-end average
+end average, start sunrise-sunset
 '''
 
+
+'''
+'''
 ax.legend(loc="lower right", title="Legend Title", frameon=False)
 
 #2.5MHz WWv
