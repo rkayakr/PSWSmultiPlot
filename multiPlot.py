@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-WWV_plt2.py
+WWV_plt2.py 
 Created on Mon July 1 2020
 Full Beacon (WWV / CHU) plotting of 2 input fomats
 added hours ticks, removed time from UTC dat in header, added zero ref line for doppler freq shift, Elv now Elev  7-31=20 JCG
