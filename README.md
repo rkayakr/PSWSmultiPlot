@@ -21,3 +21,4 @@
 		plots rest in loop as curves on first plot
 		writes date for each curve in legend
 		calculates average and plots
+	version 1.1 adds sunrise, sunset times plotted
