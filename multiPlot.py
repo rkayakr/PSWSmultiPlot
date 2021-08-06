@@ -14,14 +14,17 @@ version 1.1 adds sunrise sunset times for location of lat long in first file
 requires suntime library https://github.com/SatAgro/suntime
 
 extensive mod to plot up to 10 PSWS "rawdata" files and average value
-expects "PSWS" directory  with raw files in PSWS subdirs, leaves plot in Mplot directory
+expects a homepath directory with raw files in subdirs, leaves plot in Mplot directory
 plots files from multiple subdir to compare node results
 plot title from first file
-windows version hardcoded PSWS directory location
+
+windows version hardcoded homepath directory location
+for Pi comment out windows homepath and uncomment Pi  lines
+
 uses WWV_utility2.py
 Bob Benedict, KD8CGH, 7/29/2021
 
-create text file "plotfiles" in PSWS directory
+create text file "plotfiles" in homepath directory
   keyword ('Doppler' or 'Power')
   subdir/filename1 
   subdir/filename2
@@ -37,24 +40,31 @@ leaves plotfile in Mplot directory
 
 """
 
-#import os
+#import os # uncomment for pi
 from os import path
 import sys
 import csv
-#import shutil
-#from datetime import date, timedelta
+#import shutil  # uncomment for pi
+#from datetime import date, timedelta  # uncomment for pi
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import legend, show, grid, figure, savefig
-import matplotlib.colors as mcolors
 from scipy.signal import filtfilt, butter
 import datetime  
-import suntime
 from suntime import Sun, SunTimeException
 #import subprocess
 from WWV_utility2 import time_string_to_decimals
 
-homepath = "E:\\Documents\\PSWS\\"
+'''  #uncomment for Pi
+# ~ points to users home directory - usually /home/pi/
+homepath = os.path.expanduser('~')
+
+# imbed the trailing / in the home path
+homepath = homepath + "/PSWS/"
+
+#comment out windows homepath
+'''
+
+homepath = "E:\\Documents\\PSWS\\"  # set your windows path, comment out for Pi
 
 names = open(homepath+"plotfiles.txt","r")
 
@@ -445,7 +455,7 @@ plt.title(beaconlabel + ' Grape Data Plot\nNode:  ' + node + '     Gridsquare:  
 
 # Create Plot File Nam
 #GraphFile = yesterdaystr + '_' + node + '_' + RadioID + '_' + GridSqr + '_' + beacon + '_graph.png'
-GraphFile = 'multi '+ PlotTarget + '_' + node + '_' + RadioID + '_' + GridSqr + '_' + beacon + '.png'
+GraphFile = 'multi '+ PlotTarget + '_' + node + '_' + Filedates[0]+'_' + beacon + '.png'
 PlotGraphFile = PlotDir + GraphFile
 
 # create plot
