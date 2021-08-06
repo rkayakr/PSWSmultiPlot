@@ -18,7 +18,7 @@ for Pi comment out windows homepath and uncomment Pi  lines
 uses WWV_utility2.py
 Bob Benedict, KD8CGH, 7/29/2021
 
-create text file "plotfiles" in homepath directory
+create text file "plotfiles.txt" in homepath directory
   keyword ('Doppler' or 'Power')
   subdir/filename1 
   subdir/filename2
