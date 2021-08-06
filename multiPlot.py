@@ -1,19 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-WWV_plt2.py 
-Created on Mon July 1 2020
-Full Beacon (WWV / CHU) plotting of 2 input fomats
-added hours ticks, removed time from UTC dat in header, added zero ref line for doppler freq shift, Elv now Elev  7-31=20 JCG
-added autoplot capability 11/21/20 jgibbons
-added autoxfer, autoplot on/off capability, fixed .png filename format problem  (RadioID <-> GridSqr) 1-29-2021
-@authors dkazdan jgibbons
+multiPlot version 1.2 cleans up to make Pi and Windows use easier
 
-**********************************************
-version 1.1 adds sunrise sunset times for location of lat long in first file
+multiPlot version 1.1 adds sunrise sunset times for location of lat long in first file
 requires suntime library https://github.com/SatAgro/suntime
 
-extensive mod to plot up to 10 PSWS "rawdata" files and average value
+multiPlot version v1.0 plots up to 10 PSWS "rawdata" files and average value
+modified from WWV_plt2.py @authors dkazdan jgibbons
 expects a homepath directory with raw files in subdirs, leaves plot in Mplot directory
 plots files from multiple subdir to compare node results
 plot title from first file
@@ -37,6 +31,14 @@ plots first file and create axis and title info
 plots rest in loop as curves on first plot
 calculates average and plots
 leaves plotfile in Mplot directory
+
+uses
+WWV_utility2.py
+20 February 2020
+WWV utility file
+Routines and classes used in WWV file management and graphing
+David Kazdan, AD8Y
+John Gibbons, N8OBJ - mods to plot header 2/3/20
 
 """
 
